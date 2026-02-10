@@ -13,6 +13,8 @@ apt-get -o DPkg::Lock::Timeout=$TIMEOUT install -y docker.io
 systemctl enable docker
 systemctl start docker
 
+apt-get install awscli -y
+
 # Optional: give docker a moment to be ready
 sleep 5
 
