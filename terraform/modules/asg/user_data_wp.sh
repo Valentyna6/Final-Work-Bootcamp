@@ -3,7 +3,7 @@ set -eux
 
 echo "Running apt commands with lock timeout..."
 
-sleep 5
+sleep 10
 # Use 600 seconds (10 min) timeout – adjust if needed ( -1 = infinite, but risky)
 TIMEOUT=600
 
