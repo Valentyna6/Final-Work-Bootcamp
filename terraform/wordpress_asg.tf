@@ -1,0 +1,73 @@
+locals {
+  # This uses the shell script from your previous question
+  wp_user_data = base64encode(templatefile("${path.module}/user_data_wp.sh", {
+    db_host = aws_db_instance.wp.address
+    db_user = var.db_user
+    db_pass = var.db_pass
+    db_name = var.db_name
+  }))
+}
+
+resource "aws_launch_template" "wp" {
+  name_prefix   = "wp-lt-"
+  image_id      = data.aws_ami.ubuntu.id
+  instance_type = var.wp_instance_type
+
+  # This is the correct way to pass base64 data
+  user_data = local.wp_user_data
+
+  iam_instance_profile {
+    name = "Bootcamp-Instance-Profile"
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "wp-asg-node"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      Name = "wp-asg-node"
+    }
+  }
+
+  network_interfaces {
+    security_groups = [aws_security_group.wp_sg.id]
+  }
+}
+
+resource "aws_autoscaling_group" "wp" {
+  name                = "wp-asg"
+  min_size            = var.asg_min
+  desired_capacity    = var.asg_desired
+  max_size            = var.asg_max
+  vpc_zone_identifier = local.alb_subnets
+
+  launch_template {
+    id      = aws_launch_template.wp.id
+    version = "$Latest"
+  }
+
+  target_group_arns = [aws_lb_target_group.wp.arn]
+
+  health_check_type         = "ELB"
+  health_check_grace_period = 400
+}
+
+resource "aws_autoscaling_policy" "wp_cpu" {
+  name                   = "wp-cpu-target-70"
+  autoscaling_group_name = aws_autoscaling_group.wp.name
+  policy_type            = "TargetTrackingScaling"
+  estimated_instance_warmup = 120
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 70.0
+    disable_scale_in = false
+  }
+}
