@@ -1,8 +1,8 @@
 resource "aws_instance" "jenkins" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = var.ami_id
   instance_type          = var.jenkins_instance_type
-  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
-  subnet_id              = element(local.alb_subnets, 0)
+  vpc_security_group_ids = [var.jenkins_sg_id]
+  subnet_id              = var.subnet_id
 
   iam_instance_profile = "Bootcamp-Instance-Profile"
 

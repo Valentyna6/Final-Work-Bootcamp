@@ -1,8 +1,6 @@
 locals {
-  # This uses the shell script from your previous question
-  wp_user_data = base64encode(templatefile("${path.module}/user_data_wp.sh", {
-    db_host = aws_db_instance.wp.address
-    # db_host = "wp-bootcamp-db.czazcku22xap.eu-west-1.rds.amazonaws.com"
+  wp_user_data = base64encode(templatefile("${path.module}/user_data_wp.sh", { 
+    db_host = var.db_host
     db_user = var.db_user
     db_pass = var.db_pass
     db_name = var.db_name
@@ -11,10 +9,9 @@ locals {
 
 resource "aws_launch_template" "wp" {
   name_prefix   = "wp-lt-"
-  image_id      = data.aws_ami.ubuntu.id
+  image_id      = var.ami_id
   instance_type = var.wp_instance_type
 
-  # This is the correct way to pass base64 data
   user_data = local.wp_user_data
 
   iam_instance_profile {
@@ -36,7 +33,7 @@ resource "aws_launch_template" "wp" {
   }
 
   network_interfaces {
-    security_groups = [aws_security_group.wp_sg.id]
+    security_groups = [var.wp_sg_id]
   }
 }
 
@@ -45,14 +42,14 @@ resource "aws_autoscaling_group" "wp" {
   min_size            = var.asg_min
   desired_capacity    = var.asg_desired
   max_size            = var.asg_max
-  vpc_zone_identifier = local.alb_subnets
+  vpc_zone_identifier = var.subnets
 
   launch_template {
     id      = aws_launch_template.wp.id
     version = "$Latest"
   }
 
-  target_group_arns = [aws_lb_target_group.wp.arn]
+  target_group_arns = [var.target_group_arn]
 
   health_check_type         = "ELB"
   health_check_grace_period = 400

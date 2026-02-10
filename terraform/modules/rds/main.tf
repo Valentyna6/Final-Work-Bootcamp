@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "default" {
   name       = "wp-db-subnets"
-  subnet_ids = local.alb_subnets
+  subnet_ids = var.subnets
 
   lifecycle {
     prevent_destroy = true
@@ -18,7 +18,7 @@ resource "aws_db_instance" "wp" {
   password               = var.db_pass
   skip_final_snapshot    = true
   publicly_accessible    = false
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  vpc_security_group_ids = [var.rds_sg_id]
   db_subnet_group_name   = aws_db_subnet_group.default.name
 
   storage_encrypted      = true 

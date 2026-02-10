@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb_sg" {
   name   = "wp-alb-sg"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -19,7 +19,7 @@ resource "aws_security_group" "alb_sg" {
 
 resource "aws_security_group" "wp_sg" {
   name   = "wp-ec2-sg"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port       = 80
@@ -45,7 +45,7 @@ resource "aws_security_group" "wp_sg" {
 
 resource "aws_security_group" "rds_sg" {
   name   = "wp-rds-sg"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port       = 3306
@@ -64,7 +64,7 @@ resource "aws_security_group" "rds_sg" {
 
 resource "aws_security_group" "jenkins_sg" {
   name   = "jenkins-sg"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 8080
