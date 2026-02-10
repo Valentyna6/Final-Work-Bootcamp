@@ -6,5 +6,4 @@ resource "aws_ecr_repository" "wordpress" {
   }
 }
 
-output "ecr_repo_name" { value = aws_ecr_repository.wordpress.name }
-output "ecr_repository_url" { value = aws_ecr_repository.wordpress.repository_url }
+
