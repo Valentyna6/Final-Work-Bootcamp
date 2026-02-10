@@ -1,6 +1,10 @@
 resource "aws_db_subnet_group" "default" {
   name       = "wp-db-subnets"
   subnet_ids = local.alb_subnets
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_db_instance" "wp" {
@@ -18,4 +22,8 @@ resource "aws_db_instance" "wp" {
   db_subnet_group_name   = aws_db_subnet_group.default.name
 
   storage_encrypted      = true 
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

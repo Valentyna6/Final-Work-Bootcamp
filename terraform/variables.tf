@@ -12,9 +12,6 @@ variable "key_name" {
   default = "wp-bootcamp-key"
 }
 
-variable "public_key_path" {
-  type = string
-}
 
 variable "db_name" {
   type    = string

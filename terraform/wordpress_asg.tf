@@ -2,6 +2,7 @@ locals {
   # This uses the shell script from your previous question
   wp_user_data = base64encode(templatefile("${path.module}/user_data_wp.sh", {
     db_host = aws_db_instance.wp.address
+    # db_host = "wp-bootcamp-db.czazcku22xap.eu-west-1.rds.amazonaws.com"
     db_user = var.db_user
     db_pass = var.db_pass
     db_name = var.db_name

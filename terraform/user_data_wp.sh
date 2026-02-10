@@ -1,14 +1,24 @@
 #!/bin/bash
 set -eux
 
-sudo apt-get update -y
-sudo apt-get install -y docker.io
-sudo systemctl enable docker
-sudo systemctl start docker
+echo "Running apt commands with lock timeout..."
 
-sudo docker rm -f wordpress || true
+# Use 600 seconds (10 min) timeout – adjust if needed ( -1 = infinite, but risky)
+TIMEOUT=600
 
-sudo docker run -d --name wordpress \
+apt-get -o DPkg::Lock::Timeout=$TIMEOUT update -y
+apt-get -o DPkg::Lock::Timeout=$TIMEOUT install -y docker.io
+# Wait for apt lock to be free (retry up to ~5 minutes)
+systemctl enable docker
+systemctl start docker
+
+# Optional: give docker a moment to be ready
+sleep 5
+
+# Rest of your script...
+docker rm -f wordpress || true
+
+docker run -d --name wordpress \
   -p 80:80 \
   --restart always \
   -e WORDPRESS_DB_HOST=${db_host}:3306 \
