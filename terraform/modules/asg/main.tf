@@ -4,6 +4,7 @@ locals {
     db_user = var.db_user
     db_pass = var.db_pass
     db_name = var.db_name
+    ecr_repository_url = var.ecr_repository_url
   }))
 }
 
@@ -52,7 +53,7 @@ resource "aws_autoscaling_group" "wp" {
   target_group_arns = [var.target_group_arn]
 
   health_check_type         = "ELB"
-  health_check_grace_period = 400
+  health_check_grace_period = 460
 
   instance_refresh {
     strategy = "Rolling"
