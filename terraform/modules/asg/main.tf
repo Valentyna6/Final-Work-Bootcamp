@@ -53,6 +53,17 @@ resource "aws_autoscaling_group" "wp" {
 
   health_check_type         = "ELB"
   health_check_grace_period = 400
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 90          # at least 90% must stay healthy during refresh
+      instance_warmup        = 300         # seconds new instances get to become healthy
+      # skip_matching          = false     # optional: default false
+      # auto_rollback          = true      # optional: rollback if too many failures
+    }
+    triggers = ["tag", "launch_template"]  # refresh when launch template or tags change
+  }
 }
 
 resource "aws_autoscaling_policy" "wp_cpu" {

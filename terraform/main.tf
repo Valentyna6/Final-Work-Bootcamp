@@ -69,7 +69,14 @@ module "asg" {
   db_user           = var.db_user
   db_pass           = var.db_pass
   db_name           = var.db_name
+  ecr_repository_url = module.ecr.ecr_repository_url
+
 }
+
+module "ecr" {
+  source = "./modules/ecr"
+}
+
 
 module "jenkins" {
   source = "./modules/jenkins"
@@ -78,4 +85,5 @@ module "jenkins" {
   jenkins_instance_type  = var.jenkins_instance_type
   jenkins_sg_id          = module.security.jenkins_sg_id
   subnet_id              = element(local.alb_subnets, 0)
+  #ecr_repo_name = module.ecr.ecr_repo_name
 }
