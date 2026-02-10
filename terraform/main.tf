@@ -33,7 +33,9 @@ module "security" {
   source = "./modules/security"
 
   vpc_id     = data.aws_vpc.default.id
-  my_ip_cidr = var.my_ip_cidr
+  #my_ip_cidr = var.my_ip_cidr
+
+  jenkins_allowed_cidrs = var.jenkins_allowed_cidrs
 }
 
 module "alb" {

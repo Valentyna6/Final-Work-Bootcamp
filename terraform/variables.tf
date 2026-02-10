@@ -3,9 +3,9 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "my_ip_cidr" {
-  type = string
-}
+#variable "my_ip_cidr" {
+  #  type = string
+  #}
 
 variable "key_name" {
   type    = string
@@ -51,4 +51,9 @@ variable "asg_desired" {
 variable "asg_max" {
   type    = number
   default = 4
+}
+
+variable "jenkins_allowed_cidrs" {
+  description = "List of CIDR blocks allowed to access Jenkins"
+  type        = list(string)
 }
