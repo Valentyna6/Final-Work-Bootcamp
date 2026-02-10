@@ -19,6 +19,12 @@ resource "aws_lb_target_group" "wp" {
     interval            = 15
     matcher             = "200-399"
   }
+
+  stickiness {
+    type            = "lb_cookie"
+    enabled         = true
+    cookie_duration = 86400
+  }
 }
 
 resource "aws_lb_listener" "http" {
