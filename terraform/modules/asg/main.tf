@@ -1,10 +1,8 @@
 locals {
   wp_user_data = base64encode(templatefile("${path.module}/user_data_wp.sh", { 
-    db_host = var.db_host
-    db_user = var.db_user
-    db_pass = var.db_pass
-    db_name = var.db_name
+    db_host            = var.db_host
     ecr_repository_url = var.ecr_repository_url
+    secret_arn         = var.secret_arn
   }))
 }
 

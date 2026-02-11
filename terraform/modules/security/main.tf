@@ -1,3 +1,7 @@
+
+
+
+
 resource "aws_security_group" "alb_sg" {
   name   = "wp-alb-sg"
   vpc_id = var.vpc_id

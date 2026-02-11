@@ -12,22 +12,6 @@ variable "key_name" {
   default = "wp-bootcamp-key"
 }
 
-
-variable "db_name" {
-  type    = string
-  default = "wordpress"
-}
-
-variable "db_user" {
-  type    = string
-  default = "wordpress"
-}
-
-variable "db_pass" {
-  type      = string
-  sensitive = true
-}
-
 variable "wp_instance_type" {
   type    = string
   default = "t3.small"
@@ -48,6 +32,23 @@ variable "asg_max" {
   type    = number
   default = 4
 }
+
+variable "db_name" {
+  type        = string
+  description = "WordPress database name"
+}
+
+variable "db_user" {
+  type        = string
+  description = "WordPress database username"
+}
+
+variable "db_pass" {
+  type        = string
+  sensitive   = true
+  description = "WordPress database password"
+}
+
 
 
 

@@ -23,7 +23,7 @@ apt_wait() {
   return 1
 }
 
-apt_wait docker.io awscli
+apt_wait docker.io awscli jq
 
 # Wait for apt lock to be free (retry up to ~5 minutes)
 systemctl enable docker
@@ -38,15 +38,24 @@ docker pull ${ecr_repository_url}:latest
 # Rest of your script...
 docker rm -f wordpress || true
 
-#   This is  ecr repo ${ecr_repository_url}
+# Fetch DB credentials from AWS Secrets Manager
+SECRET_JSON=$(aws secretsmanager get-secret-value \
+  --secret-id "${secret_arn}" \
+  --region eu-west-1 \
+  --query SecretString \
+  --output text)
+
+DB_USER=$(echo "$SECRET_JSON" | jq -r '.db_user')
+DB_PASS=$(echo "$SECRET_JSON" | jq -r '.db_pass')
+DB_NAME=$(echo "$SECRET_JSON" | jq -r '.db_name')
 
 docker run -d --name wordpress \
   -p 80:80 \
   --restart always \
   -e WORDPRESS_DB_HOST=${db_host}:3306 \
-  -e WORDPRESS_DB_USER=${db_user} \
-  -e WORDPRESS_DB_PASSWORD=${db_pass} \
-  -e WORDPRESS_DB_NAME=${db_name} \
+  -e WORDPRESS_DB_USER="$DB_USER" \
+  -e WORDPRESS_DB_PASSWORD="$DB_PASS" \
+  -e WORDPRESS_DB_NAME="$DB_NAME" \
   ${ecr_repository_url}:latest
 
 echo "INITIALIZATION SCRIPT FINISHED"

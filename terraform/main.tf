@@ -23,6 +23,13 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+
+data "aws_secretsmanager_secret" "wp_db" {
+  name = "prod/team3/db"   # <-- your secret name
+}
+
+
+
 locals {
   subnets_by_az = { for s in data.aws_subnet.default : s.availability_zone => s.id... }
   alb_subnets   = [for az, ids in local.subnets_by_az : ids[0]]
@@ -59,20 +66,17 @@ module "rds" {
 module "asg" {
   source = "./modules/asg"
 
-  ami_id            = data.aws_ami.ubuntu.id
-  wp_instance_type  = var.wp_instance_type
-  asg_min           = var.asg_min
-  asg_desired       = var.asg_desired
-  asg_max           = var.asg_max
-  subnets           = local.alb_subnets
-  wp_sg_id          = module.security.wp_sg_id
-  target_group_arn  = module.alb.target_group_arn
-  db_host           = module.rds.rds_endpoint
-  db_user           = var.db_user
-  db_pass           = var.db_pass
-  db_name           = var.db_name
+  ami_id             = data.aws_ami.ubuntu.id
+  wp_instance_type   = var.wp_instance_type
+  asg_min            = var.asg_min
+  asg_desired        = var.asg_desired
+  asg_max            = var.asg_max
+  subnets            = local.alb_subnets
+  wp_sg_id           = module.security.wp_sg_id
+  target_group_arn   = module.alb.target_group_arn
+  db_host            = module.rds.rds_endpoint
   ecr_repository_url = module.ecr.ecr_repository_url
-
+  secret_arn         = data.aws_secretsmanager_secret.wp_db.arn
 }
 
 module "ecr" {
