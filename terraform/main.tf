@@ -36,6 +36,8 @@ module "security" {
   #my_ip_cidr = var.my_ip_cidr
 
   jenkins_allowed_cidrs = var.jenkins_allowed_cidrs
+
+  github_webhook_cidrs = var.github_webhook_cidrs
 }
 
 module "alb" {

@@ -71,6 +71,18 @@ resource "aws_security_group" "jenkins_sg" {
     }
   }
 
+   dynamic "ingress" {
+    for_each = var.github_webhook_cidrs
+
+    content {
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "tcp"
+      cidr_blocks = [ingress.value]
+      description = "Jenkins UI from allowed IP ${ingress.value}"
+    }
+  }
+
   #ingress {
   #  from_port   = 8080
   #  to_port     = 8080

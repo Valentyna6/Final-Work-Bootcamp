@@ -11,6 +11,8 @@ resource "aws_lb_target_group" "wp" {
   protocol = "HTTP"
   vpc_id   = var.vpc_id
 
+  deregistration_delay = 60
+
   health_check {
     path                = "/"
     healthy_threshold   = 2

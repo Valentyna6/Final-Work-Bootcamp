@@ -57,3 +57,9 @@ variable "jenkins_allowed_cidrs" {
   description = "List of CIDR blocks allowed to access Jenkins"
   type        = list(string)
 }
+
+
+variable "github_webhook_cidrs" {
+  description = "List of CIDR blocks to allow github webhook"
+  type        = list(string)
+}
