@@ -35,9 +35,7 @@ module "security" {
   vpc_id     = data.aws_vpc.default.id
   #my_ip_cidr = var.my_ip_cidr
 
-  jenkins_allowed_cidrs = var.jenkins_allowed_cidrs
 
-  github_webhook_cidrs = var.github_webhook_cidrs
 }
 
 module "alb" {
@@ -81,16 +79,6 @@ module "ecr" {
   source = "./modules/ecr"
 }
 
-
-module "jenkins" {
-  source = "./modules/jenkins"
-
-  ami_id                 = data.aws_ami.ubuntu.id
-  jenkins_instance_type  = var.jenkins_instance_type
-  jenkins_sg_id          = module.security.jenkins_sg_id
-  subnet_id              = element(local.alb_subnets, 0)
-  #ecr_repo_name = module.ecr.ecr_repo_name
-}
 
 module "github_runner" {
   source = "./modules/github-runner"

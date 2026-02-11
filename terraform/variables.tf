@@ -33,10 +33,6 @@ variable "wp_instance_type" {
   default = "t3.small"
 }
 
-variable "jenkins_instance_type" {
-  type    = string
-  default = "t3.small"
-}
 
 variable "asg_min" {
   type    = number
@@ -53,16 +49,7 @@ variable "asg_max" {
   default = 4
 }
 
-variable "jenkins_allowed_cidrs" {
-  description = "List of CIDR blocks allowed to access Jenkins"
-  type        = list(string)
-}
 
-
-variable "github_webhook_cidrs" {
-  description = "List of CIDR blocks to allow github webhook"
-  type        = list(string)
-}
 
 variable "runner_instance_type" {
   type    = string
