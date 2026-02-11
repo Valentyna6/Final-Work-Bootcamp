@@ -34,7 +34,7 @@ sleep 5
 
 aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${ecr_repository_url}
 
-docker pull ${ecr_repository_url}:latest
+docker pull ${ecr_repository_url}:stable
 # Rest of your script...
 docker rm -f wordpress || true
 
@@ -56,6 +56,6 @@ docker run -d --name wordpress \
   -e WORDPRESS_DB_USER="$DB_USER" \
   -e WORDPRESS_DB_PASSWORD="$DB_PASS" \
   -e WORDPRESS_DB_NAME="$DB_NAME" \
-  ${ecr_repository_url}:latest
+  ${ecr_repository_url}:stable
 
 echo "INITIALIZATION SCRIPT FINISHED"
