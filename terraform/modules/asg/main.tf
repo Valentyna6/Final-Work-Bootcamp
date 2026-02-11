@@ -64,7 +64,7 @@ resource "aws_autoscaling_group" "wp" {
       # auto_rollback          = true      # optional: rollback if too many failures
       # }
       #  triggers = ["tag", "launch_template"]  # refresh when launch template or tags change
-  }
+      #}
 }
 
 resource "aws_autoscaling_policy" "wp_cpu" {
