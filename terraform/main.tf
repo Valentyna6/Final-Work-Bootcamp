@@ -91,3 +91,15 @@ module "jenkins" {
   subnet_id              = element(local.alb_subnets, 0)
   #ecr_repo_name = module.ecr.ecr_repo_name
 }
+
+module "github_runner" {
+  source = "./modules/github-runner"
+
+  ami_id              = data.aws_ami.ubuntu.id
+  runner_instance_type = var.runner_instance_type
+  runner_sg_id        = module.security.runner_sg_id
+  subnet_id           = element(local.alb_subnets, 0)
+  github_token        = var.github_token
+  github_repo         = var.github_repo
+  runner_name         = var.runner_name
+}

@@ -97,3 +97,21 @@ resource "aws_security_group" "jenkins_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "github_runner_sg" {
+  name   = "github-runner-sg"
+  vpc_id = var.vpc_id
+
+  # No ingress rules - runner only makes outbound connections to GitHub
+
+  # Closed version (no outbound) - active
+  # When ready to use, comment this block and uncomment the open version below
+
+  # Open version - allows all outbound (needed for GitHub API, Docker Hub, package repos)
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

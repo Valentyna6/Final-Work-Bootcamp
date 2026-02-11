@@ -63,3 +63,25 @@ variable "github_webhook_cidrs" {
   description = "List of CIDR blocks to allow github webhook"
   type        = list(string)
 }
+
+variable "runner_instance_type" {
+  type    = string
+  default = "t3.small"
+}
+
+variable "github_token" {
+  type        = string
+  sensitive   = true
+  description = "GitHub Personal Access Token for runner registration"
+}
+
+variable "github_repo" {
+  type        = string
+  description = "GitHub repository in format owner/repo"
+}
+
+variable "runner_name" {
+  type        = string
+  default     = "aws-ec2-runner"
+  description = "Name for the GitHub Actions runner"
+}
