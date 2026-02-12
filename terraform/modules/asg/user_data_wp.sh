@@ -23,7 +23,11 @@ apt_wait() {
   return 1
 }
 
-apt_wait docker.io awscli jq
+apt_wait docker.io jq unzip
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
 
 # Wait for apt lock to be free (retry up to ~5 minutes)
 systemctl enable docker

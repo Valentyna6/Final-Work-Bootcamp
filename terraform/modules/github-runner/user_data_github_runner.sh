@@ -29,7 +29,9 @@ apt_wait docker.io jq curl
 systemctl enable docker
 systemctl start docker
 
-apt-get install awscli -y
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
 
 # Create runner user
 useradd -m -s /bin/bash runner

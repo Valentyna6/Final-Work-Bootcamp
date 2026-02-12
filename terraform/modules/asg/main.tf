@@ -53,6 +53,29 @@ resource "aws_autoscaling_group" "wp" {
   health_check_type         = "ELB"
   health_check_grace_period = 400
 
+  default_instance_warmup = 140
+
+
+  instance_refresh {
+    strategy = "Rolling"   # most common & recommended
+
+    preferences {
+      # Healthy percentage during refresh (instance maintenance policy style)
+      min_healthy_percentage = 100
+      max_healthy_percentage = 200
+
+      # Warmup for instances launched during the refresh
+      # (overrides default_instance_warmup if you want different behavior just for refresh)
+      instance_warmup = 120   # optional — you can omit if you want to use default_instance_warmup
+
+      # false = replace ALL instances (even ones that already match the new template)
+      skip_matching = false
+    }
+
+    # Optional: trigger refresh when the launch template changes
+    # (very common pattern when using $Latest)
+  }
+
   #instance_refresh {
     #strategy = "Rolling"
     #preferences {
