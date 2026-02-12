@@ -95,3 +95,13 @@ module "github_runner" {
   github_repo         = var.github_repo
   runner_name         = var.runner_name
 }
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  aws_region             = var.aws_region
+  alb_arn_suffix         = module.alb.alb_arn_suffix
+  target_group_arn_suffix = module.alb.target_group_arn_suffix
+  asg_name               = module.asg.asg_name
+  rds_identifier         = module.rds.rds_identifier
+}
