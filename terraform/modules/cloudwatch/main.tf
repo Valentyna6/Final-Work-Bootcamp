@@ -224,3 +224,56 @@ resource "aws_cloudwatch_dashboard" "main" {
     ]
   })
 }
+
+# ── Alarms (console-only, no SNS) ──
+
+resource "aws_cloudwatch_metric_alarm" "alb_5xx_errors" {
+  alarm_name          = "wp-alb-5xx-errors-team3"
+  alarm_description   = "ALB is returning HTTP 5xx errors"
+  namespace           = "AWS/ApplicationELB"
+  metric_name         = "HTTPCode_ELB_5XX_Count"
+  statistic           = "Sum"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 10
+  comparison_operator = "GreaterThanThreshold"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    LoadBalancer = var.alb_arn_suffix
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "alb_high_response_time" {
+  alarm_name          = "wp-alb-high-response-time-team3"
+  alarm_description   = "ALB target response time exceeds 3 seconds"
+  namespace           = "AWS/ApplicationELB"
+  metric_name         = "TargetResponseTime"
+  statistic           = "Average"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 3
+  comparison_operator = "GreaterThanThreshold"
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    LoadBalancer = var.alb_arn_suffix
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "rds_low_storage" {
+  alarm_name          = "wp-rds-low-storage-team3"
+  alarm_description   = "RDS free storage is below 2 GB"
+  namespace           = "AWS/RDS"
+  metric_name         = "FreeStorageSpace"
+  statistic           = "Average"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 2000000000  # 2 GB in bytes
+  comparison_operator = "LessThanThreshold"
+  treat_missing_data  = "missing"
+
+  dimensions = {
+    DBInstanceIdentifier = var.rds_identifier
+  }
+}
